@@ -49,8 +49,9 @@ def main():
   elif 'linux' == system:
     args += [
       'skia_use_system_freetype2=true',
-      # 'skia_enable_gpu=true',
-      # 'skia_use_gl=true',
+      'skia_enable_gpu=true',
+      'skia_use_gl=true',
+      'skia_use_vulkan=true',
       'extra_cflags_cc=["-frtti"]',
       'cxx="g++-9"',
     ]
@@ -58,6 +59,7 @@ def main():
     args += [
       'skia_use_system_freetype2=false',
       # 'skia_use_angle=true',
+      'skia_use_vulkan=true',
       'skia_use_direct3d=true',
       'extra_cflags=["-DSK_FONT_HOST_USE_SYSTEM_SETTINGS"]',
     ]
