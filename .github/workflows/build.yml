@@ -121,29 +121,79 @@ jobs:
     runs-on: windows-2019
     strategy:
       matrix:
-        build_type: [Release, Debug]
+        build_type: [Release]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v2
-      - shell: bash
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Check Release
+        shell: bash
         run: python3 script/check_release.py --version ${{ env.version }} --build-type ${{ matrix.build_type }}
         if: ${{ github.event.inputs.skip_release != 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: microsoft/setup-msbuild@v1
-      - uses: ilammy/msvc-dev-cmd@v1
-      - shell: bash
+      
+      - name: Install MSBuild
+        uses: microsoft/setup-msbuild@v1
+      
+      - name: MSVC Dev CMD
+        uses: ilammy/msvc-dev-cmd@v1
+      
+      - name: Set up Clang
+        uses: egor-tensin/setup-clang@v1
+        with:
+          version: latest
+          platform: x64
+      
+      - name: Set "clang_win" environment variable
+        run: echo "clang_win=C:\Program Files\LLVM" >> $env:GITHUB_ENV
+      
+      - name: Checkout Skia
+        shell: bash
         run: python3 script/checkout.py --version ${{ env.version }}
-      - shell: bash
+      
+      - name: Build Skia
+        shell: bash
         run: python3 script/build.py --build-type ${{ matrix.build_type }}
-      - shell: bash
+      
+      - name: Archive Skia
+        shell: bash
         run: python3 script/archive.py --version ${{ env.version }} --build-type ${{ matrix.build_type }}
-      - uses: actions/upload-artifact@v2
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
         with:
           name: Skia-${{ env.version }}-windows-${{ matrix.build_type }}-x64.zip
           path: '*.zip'
-      - shell: bash
+      
+      - name: Release Skia
+        shell: bash
         run: python3 script/release.py --version ${{ env.version }} --build-type ${{ matrix.build_type }}
         if: ${{ github.event.inputs.skip_release != 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - uses: actions/checkout@v2
+      # - shell: bash
+      #   run: python3 script/check_release.py --version ${{ env.version }} --build-type ${{ matrix.build_type }}
+      #   if: ${{ github.event.inputs.skip_release != 'true' }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - uses: microsoft/setup-msbuild@v1
+      # - uses: ilammy/msvc-dev-cmd@v1
+
+      # - shell: bash
+      #   run: python3 script/checkout.py --version ${{ env.version }}
+      # - shell: bash
+      #   run: python3 script/build.py --build-type ${{ matrix.build_type }}
+      # - shell: bash
+      #   run: python3 script/archive.py --version ${{ env.version }} --build-type ${{ matrix.build_type }}
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Skia-${{ env.version }}-windows-${{ matrix.build_type }}-x64.zip
+      #     path: '*.zip'
+      # - shell: bash
+      #   run: python3 script/release.py --version ${{ env.version }} --build-type ${{ matrix.build_type }}
+      #   if: ${{ github.event.inputs.skip_release != 'true' }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -22,6 +22,7 @@ def main():
   globs = [
     'out/' + build_type + '-' + machine + '/*.a',
     'out/' + build_type + '-' + machine + '/*.lib',
+    'out/' + build_type + '-' + machine + '/*.dll',
     'out/' + build_type + '-' + machine + '/icudtl.dat',
     'include/**/*',
     'modules/particles/include/*.h',

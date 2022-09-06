@@ -14,6 +14,9 @@ def main():
     args = ['is_debug=true']
   else:
     args = ['is_official_build=true']
+  
+  # produce shared library
+  args += ['is_component_build=true']
 
   args += [
     'target_cpu="' + machine + '"',
@@ -31,7 +34,7 @@ def main():
     'skia_use_system_icu=false',
     # 'skia_enable_skshaper=true',
     # 'skia_enable_svg=true',
-    'skia_enable_skottie=true'
+    'skia_enable_skottie=false'
   ]
 
   if 'macos' == system:
@@ -59,6 +62,8 @@ def main():
     args += [
       'skia_use_system_freetype2=false',
       # 'skia_use_angle=true',
+      'skia_enable_gpu=true',
+      'skia_use_gl=true',
       'skia_use_vulkan=true',
       'skia_use_direct3d=true',
       'extra_cflags=["-DSK_FONT_HOST_USE_SYSTEM_SETTINGS"]',
