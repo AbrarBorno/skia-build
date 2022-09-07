@@ -16,7 +16,7 @@ def main():
     args = ['is_official_build=true']
   
   # produce shared library
-  args += ['is_component_build=true']
+  # args += ['is_component_build=true']
 
   args += [
     'target_cpu="' + machine + '"',
