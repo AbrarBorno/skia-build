@@ -18,11 +18,11 @@ def main():
   machine = common.machine()
   system = common.system()
   classifier = common.classifier()
+  libtype = common.libtype()
 
   globs = [
     'out/' + build_type + '-' + machine + '/*.a',
     'out/' + build_type + '-' + machine + '/*.lib',
-    # 'out/' + build_type + '-' + machine + '/*.dll',
     'out/' + build_type + '-' + machine + '/icudtl.dat',
     'include/**/*',
     'modules/particles/include/*.h',
@@ -69,7 +69,12 @@ def main():
     "third_party/icu/*.h"
   ]
 
-  target = 'Skia-' + version + '-' + system + '-' + build_type + '-' + machine + classifier + '.zip'
+  if libtype == 'dynamic':
+    globs.append('out/' + build_type + '-' + machine + '/*.dll')
+  
+  linkstyle = 'static' if libtype == 'static' else 'dynamic'
+
+  target = 'Skia-' + version + '-' + system + '-' + build_type + '-' + linkstyle + '-' + machine + classifier + '.zip'
   print('> Writing', target)
   
   with zipfile.ZipFile(os.path.join(os.pardir, target), 'w', compression=zipfile.ZIP_DEFLATED) as zip:

@@ -9,9 +9,12 @@ def main():
   machine = common.machine()
   system = common.system()
   classifier = common.classifier()
+  libtype = common.libtype()
   os.chdir(os.pardir)
 
-  zip = 'Skia-' + version + '-' + system + '-' + build_type + '-' + machine + classifier + '.zip'
+  linkstyle = 'static' if libtype == 'static' else 'dynamic'
+
+  zip = 'Skia-' + version + '-' + system + '-' + build_type + '-' + linkstyle + '-' + machine + classifier + '.zip'
   if not os.path.exists(zip):
     print('Can\'t find "' + zip + '"')
     return 1

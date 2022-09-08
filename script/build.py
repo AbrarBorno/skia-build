@@ -8,15 +8,21 @@ def main():
   build_type = common.build_type()
   machine = common.machine()
   system = common.system()
-  ndk = common.ndk()  
+  ndk = common.ndk()
+  libtype = common.libtype()
 
   if build_type == 'Debug':
     args = ['is_debug=true']
   else:
     args = ['is_official_build=true']
-  
-  # produce shared library
-  # args += ['is_component_build=true']
+
+  if libtype == 'static':
+    print(f'Building static library for {system}-{machine}')
+  elif libtype == 'dynamic':
+    args += ['is_component_build=true']
+    print(f'Building dynamic library for {system}-{machine}')
+  else:
+    raise Exception('Unknown libtype: ' + libtype)
 
   args += [
     'target_cpu="' + machine + '"',

@@ -10,6 +10,7 @@ def create_parser(version_required=False):
   parser.add_argument('--system')
   parser.add_argument('--machine')
   parser.add_argument('--ndk')
+  parser.add_argument('--libtype')
   return parser
 
 def system():
@@ -21,6 +22,11 @@ def machine():
   parser = create_parser()
   (args, _) = parser.parse_known_args()
   return args.machine if args.machine else {'AMD64': 'x64', 'x86_64': 'x64', 'arm64': 'arm64'}[platform.machine()]
+
+def libtype():
+  parser = create_parser()
+  (args, _) = parser.parse_known_args()
+  return args.libtype if args.libtype else 'dynamic'
 
 def version():
   parser = create_parser()
